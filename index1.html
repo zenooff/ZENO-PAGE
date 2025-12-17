@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZENO</title>
+<style>
+  /* Fond noir et texte centré */
+  body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    color: white;
+    position: relative;
+  }
+
+  h1 {
+    position: absolute;
+    font-size: 80px;
+    z-index: 2;
+  }
+
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+</style>
+</head>
+<body>
+
+<h1>ZENO</h1>
+<canvas id="stars"></canvas>
+
+<script>
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const numStars = 200;
+const stars = [];
+
+// Fonction pour générer une couleur aléatoire
+function randomColor() {
+  const r = Math.floor(Math.random() * 256);
+  const g = Math.floor(Math.random() * 256);
+  const b = Math.floor(Math.random() * 256);
+  return `rgb(${r},${g},${b})`;
+}
+
+// Création des étoiles
+for (let i = 0; i < numStars; i++) {
+  stars.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    radius: Math.random() * 2 + 1,
+    color: randomColor(),
+    dx: (Math.random() - 0.5) * 0.5,
+    dy: (Math.random() - 0.5) * 0.5
+  });
+}
+
+// Animation des étoiles
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  stars.forEach(star => {
+    // Déplacement
+    star.x += star.dx;
+    star.y += star.dy;
+
+    // Rebondir sur les bords
+    if (star.x < 0 || star.x > canvas.width) star.dx *= -1;
+    if (star.y < 0 || star.y > canvas.height) star.dy *= -1;
+
+    // Changement de couleur
+    star.color = randomColor();
+
+    // Dessiner l'étoile
+    ctx.beginPath();
+    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+    ctx.fillStyle = star.color;
+    ctx.fill();
+  });
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+// Redimensionnement dynamique
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+</script>
+
+</body>
+</html>
